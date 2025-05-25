@@ -2,7 +2,7 @@ import { RegisterData } from '../api/types';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { setCredentials } from '../store/slices/authSlice';
+import { setUser } from '../store/slices/authSlice';
 import { authService } from '../api/services/auth';
 import { toast } from 'react-toastify';
 
@@ -34,18 +34,12 @@ const RegisterPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const { ConfirmPassword, ...formDataWithoutConfirm } = formData;
-      const registerData: RegisterData = {
-        ...formDataWithoutConfirm,
-        Role: 'user',
-        Status: 'active',
-      };
-      const user = await authService.register(registerData);
-      dispatch(setCredentials({ user, token: localStorage.getItem('token') || '' }));
+      const user = await authService.register(formData);
+      dispatch(setUser(user));
       toast.success('Đăng ký thành công!');
       navigate('/');
-    } catch (error) {
-      toast.error('Đăng ký thất bại. Vui lòng thử lại.');
+    } catch (error: any) {
+      toast.error(error.message || 'Có lỗi xảy ra khi đăng ký');
     } finally {
       setLoading(false);
     }

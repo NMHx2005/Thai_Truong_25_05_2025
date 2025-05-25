@@ -7,7 +7,6 @@ import { addOrder } from '../store/slices/orderSlice';
 import { orderService } from '../api/services/order';
 import { formatCurrency } from '../utils/format';
 import { toast } from 'react-toastify';
-import { Product } from '../api/types';
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
@@ -45,18 +44,28 @@ const CheckoutPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || items.length === 0) return;
+    if (!user) return;
 
     setLoading(true);
     try {
-      const order = await orderService.createOrder(user._id, items, subtotal, formData);
+      const orderData = {
+        ...formData,
+        items: items.map(item => ({
+          _id: item._id,
+          ProductID: item.ProductID,
+          Quantity: item.Quantity,
+          Price: item.Price
+        })),
+        totalAmount: subtotal
+      };
+
+      const order = await orderService.createOrder(user._id, items, subtotal, orderData);
       dispatch(addOrder(order));
       dispatch(clearCart());
-      toast.success('Đặt lịch lái thử thành công!');
+      toast.success('Đặt hàng thành công!');
       navigate('/orders');
     } catch (error) {
-      console.error('Error creating order:', error);
-      toast.error('Có lỗi xảy ra khi đặt lịch lái thử');
+      toast.error('Có lỗi xảy ra khi đặt hàng');
     } finally {
       setLoading(false);
     }
@@ -80,118 +89,94 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Đặt lịch lái thử</h1>
-
+      <h1 className="text-2xl font-bold text-gray-900 mb-8">Thanh toán</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6">
-            <div className="space-y-6">
-              <div>
-                <label
-                  htmlFor="Test_Drive_Date"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Ngày lái thử
-                </label>
-                <input
-                  type="date"
-                  id="Test_Drive_Date"
-                  name="Test_Drive_Date"
-                  value={formData.Test_Drive_Date}
-                  onChange={handleInputChange}
-                  min={new Date().toISOString().split('T')[0]}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="Address"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Địa chỉ
-                </label>
-                <input
-                  type="text"
-                  id="Address"
-                  name="Address"
-                  value={formData.Address}
-                  onChange={handleInputChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="Notes"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Ghi chú
-                </label>
-                <textarea
-                  id="Notes"
-                  name="Notes"
-                  value={formData.Notes}
-                  onChange={handleInputChange}
-                  rows={3}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="ImageUrl"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Hình ảnh (nếu có)
-                </label>
-                <input
-                  type="file"
-                  id="ImageUrl"
-                  name="ImageUrl"
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  className="mt-1 block w-full"
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="Test_Drive_Date"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Ngày lái thử
+              </label>
+              <input
+                type="date"
+                id="Test_Drive_Date"
+                name="Test_Drive_Date"
+                value={formData.Test_Drive_Date}
+                onChange={handleInputChange}
+                min={new Date().toISOString().split('T')[0]}
+                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              />
             </div>
 
-            <div className="mt-8">
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full bg-primary-600 text-white py-3 rounded-md hover:bg-primary-700 transition-colors ${
-                  loading ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
+            <div>
+              <label
+                htmlFor="Address"
+                className="block text-sm font-medium text-gray-700"
               >
-                {loading ? 'Đang xử lý...' : 'Xác nhận đặt lịch'}
-              </button>
+                Địa chỉ
+              </label>
+              <input
+                type="text"
+                id="Address"
+                name="Address"
+                value={formData.Address}
+                onChange={handleInputChange}
+                required
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="Notes"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Ghi chú
+              </label>
+              <textarea
+                id="Notes"
+                name="Notes"
+                value={formData.Notes}
+                onChange={handleInputChange}
+                rows={3}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="ImageUrl"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Hình ảnh (nếu có)
+              </label>
+              <input
+                type="file"
+                id="ImageUrl"
+                name="ImageUrl"
+                onChange={handleFileChange}
+                accept="image/*"
+                className="mt-1 block w-full"
+              />
             </div>
           </form>
         </div>
-
-        <div className="lg:col-span-1">
+        <div>
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Thông tin đơn hàng
-            </h2>
-
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Đơn hàng của bạn</h2>
             <div className="space-y-4">
               {items.map((item) => (
-                <div key={item.Id} className="flex justify-between">
-                  <span className="text-gray-600">
-                    {item.Product.Name} x {item.Quantity}
-                  </span>
-                  <span className="text-gray-900">
-                    {formatCurrency(item.Product.Price * item.Quantity)}
-                  </span>
+                <div key={item._id} className="flex justify-between">
+                  <span>{item.Product.Product_Name}</span>
+                  <span>{formatCurrency(item.Product.Price * item.Quantity)}</span>
                 </div>
               ))}
-
               <div className="border-t pt-4">
-                <div className="flex justify-between text-lg font-semibold text-gray-900">
+                <div className="flex justify-between font-semibold">
                   <span>Tổng cộng</span>
                   <span>{formatCurrency(subtotal)}</span>
                 </div>
