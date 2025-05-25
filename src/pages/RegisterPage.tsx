@@ -5,6 +5,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { setUser } from '../store/slices/authSlice';
 import { authService } from '../api/services/auth';
 import { toast } from 'react-toastify';
+// Import Font Awesome CSS if you are using it for icons
+// import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -20,7 +22,9 @@ const RegisterPage: React.FC = () => {
     ConfirmPassword: '',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -34,7 +38,17 @@ const RegisterPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const user = await authService.register(formData);
+      const registerData: RegisterData = {
+        UserName: formData.UserName,
+        Email: formData.Email,
+        Phone: formData.Phone,
+        FullName: formData.FullName,
+        Address: formData.Address,
+        Password: formData.Password,
+        Role: 'user',
+        Status: 'active',
+      };
+      const user = await authService.register(registerData);
       dispatch(setUser(user));
       toast.success('Đăng ký thành công!');
       navigate('/');
@@ -47,31 +61,15 @@ const RegisterPage: React.FC = () => {
 
   return (
     <div className="registration-page">
-      <div className="registration-page__container">
-        <h2 className="registration-page__card-title">
-          Đăng ký tài khoản
-        </h2>
-        <p className="registration-page__login-text">
-          Hoặc{' '}
-          <Link
-            to="/login"
-            // className="font-medium text-primary-600 hover:text-primary-500"
-          >
-            đăng nhập nếu đã có tài khoản
-          </Link>
-        </p>
-      </div>
 
-      <div className="registration-page__card">
-        <form className="registration-page__form" onSubmit={handleSubmit}>
-          <div className="registration-page__form-group">
-            <label
-              htmlFor="UserName"
-              className="registration-page__label"
-            >
-              Tên đăng nhập
-            </label>
-            <div className="registration-page__input-group">
+      <div className="registration-card">
+        <h2 className="registration-title">Đăng ký tài khoản</h2>
+        <form className="registration-form" onSubmit={handleSubmit}>
+
+          <div className="form-group">
+            <label htmlFor="UserName" className="sr-only">Tên đăng nhập</label>
+            <div className="input-group">
+              <span className="input-group-text"><i className="fas fa-user"></i></span>
               <input
                 id="UserName"
                 name="UserName"
@@ -79,19 +77,16 @@ const RegisterPage: React.FC = () => {
                 required
                 value={formData.UserName}
                 onChange={handleInputChange}
-                className="registration-page__input"
+                className="form-input"
+                placeholder="Tên đăng nhập"
               />
             </div>
           </div>
 
-          <div className="registration-page__form-group">
-            <label
-              htmlFor="Email"
-              className="registration-page__label"
-            >
-              Email
-            </label>
-            <div className="registration-page__input-group">
+          <div className="form-group">
+            <label htmlFor="Email" className="sr-only">Email</label>
+            <div className="input-group">
+             <span className="input-group-text"><i className="fas fa-envelope"></i></span>
               <input
                 id="Email"
                 name="Email"
@@ -99,19 +94,16 @@ const RegisterPage: React.FC = () => {
                 required
                 value={formData.Email}
                 onChange={handleInputChange}
-                className="registration-page__input"
+                className="form-input"
+                placeholder="Email"
               />
             </div>
           </div>
 
-          <div className="registration-page__form-group">
-            <label
-              htmlFor="Phone"
-              className="registration-page__label"
-            >
-              Số điện thoại
-            </label>
-            <div className="registration-page__input-group">
+          <div className="form-group">
+            <label htmlFor="Phone" className="sr-only">Số điện thoại</label>
+            <div className="input-group">
+             <span className="input-group-text"><i className="fas fa-phone"></i></span>
               <input
                 id="Phone"
                 name="Phone"
@@ -119,19 +111,16 @@ const RegisterPage: React.FC = () => {
                 required
                 value={formData.Phone}
                 onChange={handleInputChange}
-                className="registration-page__input"
+                className="form-input"
+                placeholder="Số điện thoại"
               />
             </div>
           </div>
 
-          <div className="registration-page__form-group">
-            <label
-              htmlFor="FullName"
-              className="registration-page__label"
-            >
-              Họ và tên
-            </label>
-            <div className="registration-page__input-group">
+          <div className="form-group">
+            <label htmlFor="FullName" className="sr-only">Họ và tên</label>
+            <div className="input-group">
+             <span className="input-group-text"><i className="fas fa-user-circle"></i></span>
               <input
                 id="FullName"
                 name="FullName"
@@ -139,19 +128,16 @@ const RegisterPage: React.FC = () => {
                 required
                 value={formData.FullName}
                 onChange={handleInputChange}
-                className="registration-page__input"
+                className="form-input"
+                placeholder="Họ và tên"
               />
             </div>
           </div>
 
-          <div className="registration-page__form-group">
-            <label
-              htmlFor="Address"
-              className="registration-page__label"
-            >
-              Địa chỉ
-            </label>
-            <div className="registration-page__input-group">
+          <div className="form-group">
+            <label htmlFor="Address" className="sr-only">Địa chỉ</label>
+            <div className="input-group">
+             <span className="input-group-text"><i className="fas fa-address-book"></i></span>
               <input
                 id="Address"
                 name="Address"
@@ -159,19 +145,16 @@ const RegisterPage: React.FC = () => {
                 required
                 value={formData.Address}
                 onChange={handleInputChange}
-                className="registration-page__input"
+                className="form-input"
+                placeholder="Địa chỉ"
               />
             </div>
           </div>
 
-          <div className="registration-page__form-group">
-            <label
-              htmlFor="Password"
-              className="registration-page__label"
-            >
-              Mật khẩu
-            </label>
-            <div className="registration-page__input-group">
+          <div className="form-group">
+            <label htmlFor="Password" className="sr-only">Mật khẩu</label>
+            <div className="input-group">
+              <span className="input-group-text"><i className="fas fa-lock"></i></span>
               <input
                 id="Password"
                 name="Password"
@@ -179,19 +162,16 @@ const RegisterPage: React.FC = () => {
                 required
                 value={formData.Password}
                 onChange={handleInputChange}
-                className="registration-page__input"
+                className="form-input"
+                placeholder="Mật khẩu"
               />
             </div>
           </div>
 
-          <div className="registration-page__form-group">
-            <label
-              htmlFor="ConfirmPassword"
-              className="registration-page__label"
-            >
-              Xác nhận mật khẩu
-            </label>
-            <div className="registration-page__input-group">
+          <div className="form-group">
+            <label htmlFor="ConfirmPassword" className="sr-only">Xác nhận mật khẩu</label>
+            <div className="input-group">
+              <span className="input-group-text"><i className="fas fa-lock"></i></span>
               <input
                 id="ConfirmPassword"
                 name="ConfirmPassword"
@@ -199,33 +179,34 @@ const RegisterPage: React.FC = () => {
                 required
                 value={formData.ConfirmPassword}
                 onChange={handleInputChange}
-                className="registration-page__input"
+                className="form-input"
+                placeholder="Xác nhận mật khẩu"
               />
             </div>
           </div>
 
-          <div className="registration-page__actions">
+          <div className="form-group">
             <button
               type="submit"
               disabled={loading}
-              className={`registration-page__btn-submit ${
-                loading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`registration-button ${loading ? 'disabled' : ''}`}
             >
               {loading ? 'Đang xử lý...' : 'Đăng ký'}
             </button>
           </div>
         </form>
-        {/* <p className="mt-8 text-center text-sm text-gray-600">
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            className="font-medium text-primary-600 hover:text-primary-500"
-          >
-            Sign In
-          </Link>
-        </p> */}
       </div>
+
+      <p className="registration-login-text">
+        Hoặc{' '}
+        <Link to="/login" >
+          đăng nhập nếu đã có tài khoản
+        </Link>
+      </p>
+       {/* Add copyright text */}
+       <div className="registration-footer-text">
+          <small>&copy; 2023 BMW Bavarian. All rights reserved.</small>
+       </div>
     </div>
   );
 };

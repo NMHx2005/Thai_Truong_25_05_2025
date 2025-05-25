@@ -8,42 +8,51 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const unavailable = product.Status === 'unavailable';
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-      <Link to={`/products/${product._id}`}>
-        <div className="relative h-48">
+    <div className="product-card">
+      <div className="product-card__image">
+        <Link to={`/san-pham/${product._id}`}>
           <img
             src={product.Main_Image}
             alt={product.Product_Name}
-            className="w-full h-full object-cover"
           />
-          {product.Status === 'unavailable' && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <span className="text-white font-semibold">Hết hàng</span>
+          {unavailable && (
+            <div className="product-card__tags">
+              <span className="product-card__tag product-card__tag--unavailable">Hết hàng</span>
             </div>
           )}
-        </div>
-      </Link>
+        </Link>
+      </div>
 
-      <div className="p-4">
-        <Link
-          to={`/products/${product._id}`}
-          className="text-lg font-semibold text-gray-800 hover:text-primary-600"
-        >
+      <div className="product-card__info">
+        <Link to={`/san-pham/${product._id}`} className="product-card__title">
           {product.Product_Name}
         </Link>
 
-        <p className="text-gray-600 mt-2 line-clamp-2">{product.Description}</p>
-
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xl font-bold text-primary-600">
-            {formatCurrency(product.Price)}
+        <div className="product-card__specs">
+          <span className="product-card__spec">
+            <i className="fas fa-tachometer-alt"></i> 300 HP
           </span>
-          <Link
-            to={`/products/${product._id}`}
-            className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
-          >
-            Chi tiết
+          <span className="product-card__spec">
+            <i className="fas fa-gas-pump"></i> Xăng
+          </span>
+          <span className="product-card__spec">
+            <i className="fas fa-cog"></i> Tự động
+          </span>
+        </div>
+
+        <div className="product-card__price">
+          {formatCurrency(product.Price)}
+        </div>
+
+        <div className="product-card__actions">
+          <Link to={`/san-pham/${product._id}`} className="product-card__btn-detail">
+            Xem chi tiết
+          </Link>
+          <Link to="/dat-hen-lai-thu" className="product-card__btn-test-drive">
+            Đặt lái thử
           </Link>
         </div>
       </div>

@@ -14,6 +14,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
 import PriceListPage from './pages/PriceListPage';
 import ProductListPage from './pages/ProductListPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import ServicePage from './pages/ServicePage';
 import TestDrivePage from './pages/TestDrivePage';
 import NewsPage from './pages/NewsPage';
@@ -31,6 +32,7 @@ const App: React.FC = () => {
             <Route path="/" element={<MainLayout />}>
               <Route index element={<HomePage />} />
               <Route path="san-pham" element={<ProductListPage />} />
+              <Route path="san-pham/:id" element={<ProductDetailPage />} />
               <Route path="bang-gia" element={<PriceListPage />} />
               <Route path="dich-vu" element={<ServicePage />} />
               <Route path="dat-hen-lai-thu" element={<TestDrivePage />} />

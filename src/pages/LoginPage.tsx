@@ -39,12 +39,12 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="login-page flex justify-center items-center min-h-[calc(100vh-100px)]">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">Đăng nhập</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Tên đăng nhập</label>
+    <div className="login-container">
+      <div className="login-card">
+        <h2 className="login-title">Đăng nhập</h2>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label htmlFor="username" className="form-label">Tên đăng nhập</label>
             <input
               type="text"
               id="username"
@@ -52,11 +52,11 @@ const LoginPage: React.FC = () => {
               value={formData.UserName}
               onChange={handleInputChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              className="form-input"
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mật khẩu</label>
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Mật khẩu</label>
             <input
               type="password"
               id="password"
@@ -64,16 +64,14 @@ const LoginPage: React.FC = () => {
               value={formData.Password}
               onChange={handleInputChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              className="form-input"
             />
           </div>
-          <div>
+          <div className="form-group">
             <button
               type="submit"
               disabled={loading}
-              className={`w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors ${
-                loading ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`form-button ${loading ? 'disabled' : ''}`}
             >
               {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>

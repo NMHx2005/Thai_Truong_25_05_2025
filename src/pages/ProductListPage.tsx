@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Product } from '../api/types'; // Import Product type
+import ProductCard from '../components/product/ProductCard'; // Import ProductCard component
 
 const ProductListPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -7,43 +9,193 @@ const ProductListPage: React.FC = () => {
 
   const handleCategoryClick = (category: string) => {
     setActiveCategory(category);
-    console.log('Filtering by category:', category);
+    // console.log('Filtering by category:', category);
   };
 
   const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSortBy(event.target.value);
-    console.log('Sorting by:', event.target.value);
+    // console.log('Sorting by:', event.target.value);
   };
 
   const handleViewChange = (view: string) => {
     setViewOption(view);
-    console.log('Changing view to:', view);
+    // console.log('Changing view to:', view);
   };
 
-  // Dummy product data - replace with actual data fetching later
-  const products = [
-    { category: 'sedan', img: '/images/new_bmw_3_series_sedan.webp', title: 'BMW 3 Series', specs: ['258 HP', 'Xăng', 'Tự động'], price: '1.869.000.000 VNĐ', tags: ['Mới'] },
-    { category: 'sedan', img: '/images/new_bmw_5_series.webp', title: 'BMW 5 Series', specs: ['300 HP', 'Xăng', 'Tự động'], price: '2.969.000.000 VNĐ', tags: [] },
-    { category: 'sedan', img: '/images/7_series.webp', title: 'BMW 7 Series', specs: ['340 HP', 'Xăng', 'Tự động'], price: '5.369.000.000 VNĐ', tags: ['Luxury'] },
-    { category: 'suv', img: '/images/x3_2_.webp', title: 'BMW X3', specs: ['252 HP', 'Xăng', 'Tự động'], price: '2.499.000.000 VNĐ', tags: [] },
-    { category: 'suv', img: '/images/x5_resize.webp', title: 'BMW X5', specs: ['340 HP', 'Xăng', 'Tự động'], price: '3.469.000.000 VNĐ', tags: ['Bán chạy'] },
-    { category: 'suv', img: '/images/x7-xdrive40i-m-sport.png', title: 'BMW X7', specs: ['340 HP', 'Xăng', 'Tự động'], price: '5.549.000.000 VNĐ', tags: ['Luxury'] },
-    { category: 'coupe', img: '/images/4_gc.webp', title: 'BMW 4 Series', specs: ['258 HP', 'Xăng', 'Tự động'], price: '2.999.000.000 VNĐ', tags: [] },
-    { category: 'm', img: '/images/di23_000192972.webp', title: 'BMW M3', specs: ['510 HP', 'Xăng', 'Tự động'], price: '4.299.000.000 VNĐ', tags: ['Performance'] },
-    { category: 'm', img: '/images/di23_000192972 (1).webp', title: 'BMW M4', specs: ['530 HP', 'Xăng', 'Tự động'], price: '8.999.000.000 VNĐ', tags: ['Performance'] },
-    { category: 'i', img: '/images/i4.webp', title: 'BMW i4', specs: ['340 HP', 'Điện', 'Tự động'], price: '3.599.000.000 VNĐ', tags: ['Electric'] },
-    { category: 'i', img: '/images/new_bmw_ix3_series.webp', title: 'BMW iX3', specs: ['523 HP', 'Điện', 'Tự động'], price: '4.699.000.000 VNĐ', tags: ['Electric', 'Mới'] },
+  // Hardcoded product data - replace with actual data fetching later
+  const products: Product[] = [
+    {
+      _id: '1',
+      Product_Name: 'BMW 3 Series',
+      CategoryID: 'sedan',
+      Main_Image: '/images/new_bmw_3_series_sedan.webp',
+      List_Image: [], // Add actual images if available
+      Specifications: { 'Engine': '2.0L TwinPower Turbo', 'Horsepower': '258 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 10,
+      Price: 1869000000,
+      Description: 'Dòng sedan thể thao và thanh lịch.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '2',
+      Product_Name: 'BMW 5 Series',
+      CategoryID: 'sedan',
+      Main_Image: '/images/new_bmw_5_series.webp',
+      List_Image: [],
+      Specifications: { 'Engine': '2.0L TwinPower Turbo', 'Horsepower': '300 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 8,
+      Price: 2969000000,
+      Description: 'Biểu tượng của sự sang trọng và hiệu suất.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '3',
+      Product_Name: 'BMW 7 Series',
+      CategoryID: 'sedan',
+      Main_Image: '/images/7_series.webp',
+      List_Image: [],
+      Specifications: { 'Engine': '3.0L TwinPower Turbo', 'Horsepower': '340 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 5,
+      Price: 5369000000,
+      Description: 'Đỉnh cao của sự tiện nghi và công nghệ.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '4',
+      Product_Name: 'BMW X3',
+      CategoryID: 'suv',
+      Main_Image: '/images/x3_2_.webp',
+      List_Image: [],
+      Specifications: { 'Engine': '2.0L TwinPower Turbo', 'Horsepower': '252 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 12,
+      Price: 2499000000,
+      Description: 'SUV nhỏ gọn đa năng và linh hoạt.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '5',
+      Product_Name: 'BMW X5',
+      CategoryID: 'suv',
+      Main_Image: '/images/x5_resize.webp',
+      List_Image: [],
+      Specifications: { 'Engine': '3.0L TwinPower Turbo', 'Horsepower': '340 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 9,
+      Price: 3469000000,
+      Description: 'SUV hạng trung sang trọng và mạnh mẽ.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '6',
+      Product_Name: 'BMW X7',
+      CategoryID: 'suv',
+      Main_Image: '/images/x7-xdrive40i-m-sport.png',
+      List_Image: [],
+      Specifications: { 'Engine': '3.0L TwinPower Turbo', 'Horsepower': '340 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 7,
+      Price: 5549000000,
+      Description: 'SUV 7 chỗ đẳng cấp và tiện nghi.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '7',
+      Product_Name: 'BMW 4 Series Coupe',
+      CategoryID: 'coupe',
+      Main_Image: '/images/4_gc.webp',
+      List_Image: [],
+      Specifications: { 'Engine': '2.0L TwinPower Turbo', 'Horsepower': '258 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 6,
+      Price: 2999000000,
+      Description: 'Thiết kế coupe thể thao và cá tính.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '8',
+      Product_Name: 'BMW M3 Competition',
+      CategoryID: 'm',
+      Main_Image: '/images/di23_000192972.webp',
+      List_Image: [],
+      Specifications: { 'Engine': '3.0L M TwinPower Turbo', 'Horsepower': '510 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 3,
+      Price: 4299000000,
+      Description: 'Hiệu suất đỉnh cao từ bộ phận M.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '9',
+      Product_Name: 'BMW M4 Competition',
+      CategoryID: 'm',
+      Main_Image: '/images/di23_000192972 (1).webp',
+      List_Image: [],
+      Specifications: { 'Engine': '3.0L M TwinPower Turbo', 'Horsepower': '530 hp', 'Transmission': '8-speed Automatic' },
+      Status: 'available',
+      Stock: 2,
+      Price: 8999000000,
+      Description: 'Sự kết hợp giữa thiết kế coupe và hiệu suất M.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '10',
+      Product_Name: 'BMW i4',
+      CategoryID: 'i',
+      Main_Image: '/images/i4.webp',
+      List_Image: [],
+      Specifications: { 'Motor': 'Electric', 'Horsepower': '340 hp', 'Range': 'Up to 590 km' },
+      Status: 'available',
+      Stock: 15,
+      Price: 3599000000,
+      Description: 'Gran Coupé thuần điện đầu tiên.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      _id: '11',
+      Product_Name: 'BMW iX3',
+      CategoryID: 'i',
+      Main_Image: '/images/new_bmw_ix3_series.webp',
+      List_Image: [],
+      Specifications: { 'Motor': 'Electric', 'Horsepower': '286 hp', 'Range': 'Up to 460 km' },
+      Status: 'available',
+      Stock: 11,
+      Price: 4699000000,
+      Description: 'SUV thuần điện đa dụng.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
   ];
 
-  // Simple filtering logic (can be expanded later)
-  const filteredProducts = activeCategory === 'all' ? products : products.filter(p => p.category === activeCategory);
+  // Simple filtering logic
+  const filteredProducts = activeCategory === 'all' ? products : products.filter(p => p.CategoryID === activeCategory);
 
-  // Simple sorting logic (can be expanded later)
+  // Simple sorting logic
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortBy === 'price-asc') return parseFloat(a.price.replace(/[^\d.]/g, '')) - parseFloat(b.price.replace(/[^\d.]/g, ''));
-    if (sortBy === 'price-desc') return parseFloat(b.price.replace(/[^\d.]/g, '')) - parseFloat(a.price.replace(/[^\d.]/g, ''));
-    if (sortBy === 'name-asc') return a.title.localeCompare(b.title);
-    return 0; // newest (no sorting for this simple example)
+    if (sortBy === 'price-asc') return a.Price - b.Price;
+    if (sortBy === 'price-desc') return b.Price - a.Price;
+    if (sortBy === 'name-asc') return a.Product_Name.localeCompare(b.Product_Name);
+    // For newest, we can sort by createdAt timestamp if available, otherwise no sort
+    if (sortBy === 'newest') {
+      if (a.createdAt && b.createdAt) {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      return 0; // Keep original order if no timestamps
+    }
+    return 0;
   });
 
   return (
@@ -102,41 +254,8 @@ const ProductListPage: React.FC = () => {
 
           {/* Product Grid/List */}
           <div className={`product-items ${viewOption === 'list' ? 'product-items--list-view' : ''}`}>
-            {sortedProducts.map((product, index) => (
-              <div key={index} className={`product-card ${viewOption === 'list' ? 'product-card--list-view' : ''}`}>
-                <div className="product-card__image">
-                  <img src={product.img} alt={product.title} />
-                  {product.tags.length > 0 && (
-                    <div className="product-card__tags">
-                      {product.tags.map((tag, tagIndex) => (
-                        <span key={tagIndex} className={`product-card__tag product-card__tag--${tag.toLowerCase().replace(' ', '-')}`}>{tag}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="product-card__info">
-                  <h3 className="product-card__title">{product.title}</h3>
-                  <div className="product-card__specs">
-                    {product.specs.map((spec, specIndex) => (
-                      <span key={specIndex} className="product-card__spec">
-                        {/* Assuming simple icons for now - need actual icon mapping */}
-                        {spec.includes('HP') && <i className="fas fa-tachometer-alt"></i>}
-                        {spec.includes('Xăng') && <i className="fas fa-gas-pump"></i>}
-                        {spec.includes('Điện') && <i className="fas fa-charging-station"></i>}
-                        {spec.includes('Tự động') && <i className="fas fa-cog"></i>}
-                        {spec}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="product-card__price">
-                    <span className="product-card__price-value">{product.price}</span>
-                  </div>
-                  <div className="product-card__actions">
-                    <a href="#" className="product-card__btn-detail">Xem chi tiết</a>
-                    <a href="#" className="product-card__btn-test-drive">Đặt lái thử</a>
-                  </div>
-                </div>
-              </div>
+            {sortedProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
             ))}
           </div>
 
@@ -190,7 +309,7 @@ const ProductListPage: React.FC = () => {
             </div>
             <div className="featured-product-section__col">
               <div className="featured-product-section__image">
-                <img src="/images/bmw-x5m.png" alt="BMW X5 M Competition" />
+                <img src="/images/bmw-x5m.jpg" alt="BMW X5 M Competition" />
               </div>
             </div>
           </div>
@@ -210,6 +329,7 @@ const ProductListPage: React.FC = () => {
                   <label htmlFor="compare1">Xe thứ nhất</label>
                   <select id="compare1" className="compare-products-section__select">
                     <option value="">Chọn xe</option>
+                    {/* Options can be generated from product data later */}
                     <option value="3-series">BMW 3 Series</option>
                     <option value="5-series">BMW 5 Series</option>
                     <option value="7-series">BMW 7 Series</option>
@@ -224,6 +344,7 @@ const ProductListPage: React.FC = () => {
                   <label htmlFor="compare2">Xe thứ hai</label>
                   <select id="compare2" className="compare-products-section__select">
                     <option value="">Chọn xe</option>
+                    {/* Options can be generated from product data later */}
                     <option value="3-series">BMW 3 Series</option>
                     <option value="5-series">BMW 5 Series</option>
                     <option value="7-series">BMW 7 Series</option>
@@ -238,6 +359,7 @@ const ProductListPage: React.FC = () => {
                   <label htmlFor="compare3">Xe thứ ba (tùy chọn)</label>
                   <select id="compare3" className="compare-products-section__select">
                     <option value="">Chọn xe</option>
+                    {/* Options can be generated from product data later */}
                     <option value="3-series">BMW 3 Series</option>
                     <option value="5-series">BMW 5 Series</option>
                     <option value="7-series">BMW 7 Series</option>
