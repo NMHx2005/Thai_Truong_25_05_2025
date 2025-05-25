@@ -7,7 +7,7 @@ import { productService } from '../../api/services/product';
 import { formatCurrency } from '../../utils/format';
 import { toast } from 'react-toastify';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { Product } from '../../types';
+import { Product, CartItem } from '../../api/types';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -56,15 +56,16 @@ const ProductDetail: React.FC = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      const existingItem = cartItems.find(item => item.ProductId === product._id);
+      const existingItem = cartItems.find(item => item.ProductID === product._id);
       if (existingItem) {
         dispatch(addToCart({ ...existingItem, Quantity: existingItem.Quantity + quantity }));
       } else {
-        const newItem = {
-          Id: '',
-          ProductId: product._id,
-          UserId: '',
+        const newItem: CartItem = {
+          _id: '',
+          CartID: '',
+          ProductID: product._id,
           Quantity: quantity,
+          Price: product.Price,
           Product: product,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),

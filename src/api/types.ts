@@ -29,12 +29,15 @@ export interface RegisterData {
 
 export interface Product {
   _id: string;
-  Name: string;
-  Description: string;
+  Product_Name: string;
+  CategoryID: string;
+  Description?: string;
   Price: number;
-  Image: string;
-  CategoryId: string;
-  Status: 'active' | 'inactive';
+  Main_Image: string;
+  List_Image: string[];
+  Specifications: Record<string, string>;
+  Status: 'available' | 'unavailable';
+  Stock: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -49,10 +52,11 @@ export interface Category {
 }
 
 export interface CartItem {
-  Id: string;
-  ProductId: string;
-  UserId: string;
+  _id: string;
+  CartID: string;
+  ProductID: string;
   Quantity: number;
+  Price: number;
   Product: Product;
   createdAt: string;
   updatedAt: string;

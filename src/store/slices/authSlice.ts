@@ -1,16 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../../api/types';
+import { User, LoginCredentials } from '../../api/types';
+import { authService } from '../../api/services/auth';
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  token: localStorage.getItem('token'),
   loading: false,
   error: null,
 };
@@ -19,18 +18,8 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setCredentials: (
-      state,
-      action: PayloadAction<{ user: User; token: string }>
-    ) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-      localStorage.setItem('token', action.payload.token);
-    },
-    logout: (state) => {
-      state.user = null;
-      state.token = null;
-      localStorage.removeItem('token');
+    setUser: (state, action: PayloadAction<User | null>) => {
+      state.user = action.payload;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
@@ -41,5 +30,21 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, logout, setLoading, setError } = authSlice.actions;
+export const { setUser, setLoading, setError } = authSlice.actions;
+
+// Thunk actions
+export const login = (credentials: LoginCredentials) => async (dispatch: any) => {
+  dispatch(setLoading(true));
+  try {
+    const user = await authService.login(credentials);
+    dispatch(setUser(user));
+    return user;
+  } catch (error: any) {
+    dispatch(setError(error.message));
+    throw error;
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
 export default authSlice.reducer; 

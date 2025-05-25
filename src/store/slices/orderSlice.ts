@@ -3,14 +3,12 @@ import { Order } from '../../api/types';
 
 interface OrderState {
   orders: Order[];
-  selectedOrder: Order | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: OrderState = {
   orders: [],
-  selectedOrder: null,
   loading: false,
   error: null,
 };
@@ -22,14 +20,11 @@ const orderSlice = createSlice({
     setOrders: (state, action: PayloadAction<Order[]>) => {
       state.orders = action.payload;
     },
-    setSelectedOrder: (state, action: PayloadAction<Order | null>) => {
-      state.selectedOrder = action.payload;
-    },
     addOrder: (state, action: PayloadAction<Order>) => {
       state.orders.push(action.payload);
     },
-    updateOrderStatus: (state, action: PayloadAction<{ id: number; status: string }>) => {
-      const order = state.orders.find(order => order.Id === action.payload.id);
+    updateOrder: (state, action: PayloadAction<{ id: string; status: 'pending' | 'confirmed' | 'completed' | 'cancelled' }>) => {
+      const order = state.orders.find(order => order._id === action.payload.id);
       if (order) {
         order.Status = action.payload.status;
       }
@@ -45,9 +40,8 @@ const orderSlice = createSlice({
 
 export const {
   setOrders,
-  setSelectedOrder,
   addOrder,
-  updateOrderStatus,
+  updateOrder,
   setLoading,
   setError,
 } = orderSlice.actions;
