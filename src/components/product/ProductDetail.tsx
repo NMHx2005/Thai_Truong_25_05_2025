@@ -1,27 +1,46 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../store/slices/cartSlice';
 import { RootState } from '../../store';
-import { addCartItem } from '../../store/slices/cartSlice';
+import { productService } from '../../api/services/product';
 import { formatCurrency } from '../../utils/format';
+import { toast } from 'react-toastify';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { Product } from '../../types';
 
 const ProductDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
-  const { selectedProduct: product } = useSelector(
-    (state: RootState) => state.product
-  );
+  const { items: cartItems } = useSelector((state: RootState) => state.cart);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  if (!product) {
-    return (
-      <div className="text-center text-gray-600 py-8">
-        <p>Không tìm thấy thông tin sản phẩm</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        if (id) {
+          const productData = await productService.getProductById(id);
+          setProduct(productData);
+        }
+      } catch (err) {
+        setError('Failed to fetch product');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const allImages = [product.Main_Image, ...product.List_Image];
+    fetchProduct();
+  }, [id]);
+
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>Lỗi: {error}</p>;
+  if (!product) return <p>Không tìm thấy sản phẩm.</p>;
+
+  const allImages = product.List_Image ? [product.Main_Image, ...product.List_Image] : [product.Main_Image];
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) =>
@@ -36,7 +55,24 @@ const ProductDetail: React.FC = () => {
   };
 
   const handleAddToCart = () => {
-    dispatch(addCartItem({ product, quantity }));
+    if (product) {
+      const existingItem = cartItems.find(item => item.ProductId === product._id);
+      if (existingItem) {
+        dispatch(addToCart({ ...existingItem, Quantity: existingItem.Quantity + quantity }));
+      } else {
+        const newItem = {
+          Id: '',
+          ProductId: product._id,
+          UserId: '',
+          Quantity: quantity,
+          Product: product,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        dispatch(addToCart(newItem));
+      }
+      toast.success(`${quantity} x ${product.Product_Name} đã thêm vào giỏ hàng`);
+    }
   };
 
   return (

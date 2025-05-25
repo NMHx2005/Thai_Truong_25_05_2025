@@ -23,13 +23,13 @@ const cartSlice = createSlice({
     addToCart: (state, action: PayloadAction<CartItem>) => {
       state.items.push(action.payload);
     },
-    updateCartItem: (state, action: PayloadAction<{ id: number; quantity: number }>) => {
+    updateCartItem: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
       const item = state.items.find(item => item.Id === action.payload.id);
       if (item) {
         item.Quantity = action.payload.quantity;
       }
     },
-    removeFromCart: (state, action: PayloadAction<number>) => {
+    removeFromCart: (state, action: PayloadAction<string>) => {
       state.items = state.items.filter(item => item.Id !== action.payload);
     },
     clearCart: (state) => {

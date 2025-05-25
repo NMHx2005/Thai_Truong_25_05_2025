@@ -7,12 +7,13 @@ import { addOrder } from '../store/slices/orderSlice';
 import { orderService } from '../api/services/order';
 import { formatCurrency } from '../utils/format';
 import { toast } from 'react-toastify';
+import { Product } from '../api/types';
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-  const { cart, items } = useSelector((state: RootState) => state.cart);
+  const { items } = useSelector((state: RootState) => state.cart);
 
   const [formData, setFormData] = useState({
     Order_Date: new Date().toISOString().split('T')[0],
@@ -37,18 +38,24 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
+  const subtotal = items.reduce(
+    (total, item) => total + item.Product.Price * item.Quantity,
+    0
+  );
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !cart) return;
+    if (!user || items.length === 0) return;
 
     setLoading(true);
     try {
-      const order = await orderService.createOrder(user._id, cart._id, formData);
+      const order = await orderService.createOrder(user._id, items, subtotal, formData);
       dispatch(addOrder(order));
       dispatch(clearCart());
       toast.success('Đặt lịch lái thử thành công!');
       navigate('/orders');
     } catch (error) {
+      console.error('Error creating order:', error);
       toast.error('Có lỗi xảy ra khi đặt lịch lái thử');
     } finally {
       setLoading(false);
@@ -70,11 +77,6 @@ const CheckoutPage: React.FC = () => {
       </div>
     );
   }
-
-  const subtotal = items.reduce(
-    (total, item) => total + item.Price * item.Quantity,
-    0
-  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -178,12 +180,12 @@ const CheckoutPage: React.FC = () => {
 
             <div className="space-y-4">
               {items.map((item) => (
-                <div key={item._id} className="flex justify-between">
+                <div key={item.Id} className="flex justify-between">
                   <span className="text-gray-600">
-                    {item.ProductID.Product_Name} x {item.Quantity}
+                    {item.Product.Name} x {item.Quantity}
                   </span>
                   <span className="text-gray-900">
-                    {formatCurrency(item.Price * item.Quantity)}
+                    {formatCurrency(item.Product.Price * item.Quantity)}
                   </span>
                 </div>
               ))}

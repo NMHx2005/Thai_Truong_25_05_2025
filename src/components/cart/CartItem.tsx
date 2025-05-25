@@ -13,12 +13,12 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity > 0) {
-      dispatch(updateCartItem({ itemId: item._id, quantity: newQuantity }));
+      dispatch(updateCartItem({ id: item.Id, quantity: newQuantity }));
     }
   };
 
   const handleRemove = () => {
-    dispatch(removeFromCart(item._id));
+    dispatch(removeFromCart(item.Id));
   };
 
   return (

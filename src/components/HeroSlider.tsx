@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 // Remove unused imports if any, or keep if still needed elsewhere
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 

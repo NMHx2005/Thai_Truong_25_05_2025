@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { setCredentials } from '../store/slices/authSlice';
-import { authService } from '../api/services/auth';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../store/slices/authSlice';
+import { LoginCredentials } from '../api/types';
 import { toast } from 'react-toastify';
 
 const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState<LoginCredentials>({
     UserName: '',
     Password: '',
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -22,86 +26,63 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const user = await authService.login(formData);
-      dispatch(setCredentials({ user, token: localStorage.getItem('token') || '' }));
+      // Assuming login action handles API call and sets user in state
+      await dispatch(login(formData) as any); // Dispatching async action
       toast.success('Đăng nhập thành công!');
-      navigate('/');
-    } catch (error) {
-      toast.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+      navigate('/'); // Redirect to home or dashboard
+    } catch (error: any) {
+      toast.error(error.message || 'Đăng nhập thất bại. Vui lòng kiểm tra tên đăng nhập và mật khẩu.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="login-page">
-      <div className="login-page__container">
-        <div className="login-page__logo">
-          <img src="/images/BMW_logo_(gray).svg.png" alt="BMW Logo" width="80" height="80" />
-          <h2 className="login-page__logo-text">BAVARIAN</h2>
-        </div>
-
-        <div className="login-page__card">
-          <h4 className="login-page__card-title">Đăng nhập quản trị</h4>
-
-          <form className="login-page__form" onSubmit={handleSubmit}>
-            <div className="login-page__form-group">
-              <div className="login-page__input-group">
-                <span className="login-page__input-group-text">
-                  <i className="fas fa-user"></i>
-                </span>
-                <input
-                  type="text"
-                  className="login-page__input"
-                  id="UserName"
-                  name="UserName"
-                  value={formData.UserName}
-                  onChange={handleInputChange}
-                  placeholder="Tên đăng nhập"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="login-page__form-group">
-              <div className="login-page__input-group">
-                <span className="login-page__input-group-text">
-                  <i className="fas fa-lock"></i>
-                </span>
-                <input
-                  type="password"
-                  className="login-page__input"
-                  id="Password"
-                  name="Password"
-                  value={formData.Password}
-                  onChange={handleInputChange}
-                  placeholder="Mật khẩu"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="login-page__options">
-              <div className="login-page__form-check">
-                <input className="login-page__form-check-input" type="checkbox" id="rememberMe" />
-                <label className="login-page__form-check-label" htmlFor="rememberMe">
-                  Ghi nhớ đăng nhập
-                </label>
-              </div>
-              <a href="#" className="login-page__forgot-password-link">Quên mật khẩu?</a>
-            </div>
-
-            <button type="submit" className="login-page__btn-login" disabled={loading}>
-              {loading ? 'Đang xử lý...' : 'Đăng nhập'}
+    <div className="login-page flex justify-center items-center min-h-[calc(100vh-100px)]">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">Đăng nhập</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Tên đăng nhập</label>
+            <input
+              type="text"
+              id="username"
+              name="UserName"
+              value={formData.UserName}
+              onChange={handleInputChange}
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Mật khẩu</label>
+            <input
+              type="password"
+              id="password"
+              name="Password"
+              value={formData.Password}
+              onChange={handleInputChange}
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+            />
+          </div>
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 transition-colors ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </button>
-          </form>
-        </div>
-
-        <div className="login-page__footer-text">
-          <small>&copy; 2023 BMW Bavarian. All rights reserved.</small>
-        </div>
+          </div>
+        </form>
+        {/* Assuming there's a registration page to link to */}
+        {/* <p className="mt-6 text-center text-gray-600">
+          Chưa có tài khoản? <Link to="/register" className="text-primary-600 hover:underline">Đăng ký ngay</Link>
+        </p> */}
       </div>
     </div>
   );

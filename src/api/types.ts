@@ -49,7 +49,7 @@ export interface Category {
 }
 
 export interface CartItem {
-  _id: string;
+  Id: string;
   ProductId: string;
   UserId: string;
   Quantity: number;
