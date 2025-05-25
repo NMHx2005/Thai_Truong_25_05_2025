@@ -27,10 +27,14 @@ const authSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    logout: (state) => {
+      state.user = null;
+      state.error = null;
+    },
   },
 });
 
-export const { setUser, setLoading, setError } = authSlice.actions;
+export const { setUser, setLoading, setError, logout } = authSlice.actions;
 
 // Thunk actions
 export const login = (credentials: LoginCredentials) => async (dispatch: any) => {

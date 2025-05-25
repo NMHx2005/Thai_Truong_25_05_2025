@@ -13,11 +13,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <Link to={`/products/${product._id}`}>
         <div className="relative h-48">
           <img
-            src={product.Image}
-            alt={product.Name}
+            src={product.Main_Image}
+            alt={product.Product_Name}
             className="w-full h-full object-cover"
           />
-          {product.Status === 'inactive' && (
+          {product.Status === 'unavailable' && (
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
               <span className="text-white font-semibold">Hết hàng</span>
             </div>
@@ -30,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           to={`/products/${product._id}`}
           className="text-lg font-semibold text-gray-800 hover:text-primary-600"
         >
-          {product.Name}
+          {product.Product_Name}
         </Link>
 
         <p className="text-gray-600 mt-2 line-clamp-2">{product.Description}</p>

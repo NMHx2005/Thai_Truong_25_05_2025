@@ -13,23 +13,23 @@ const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity > 0) {
-      dispatch(updateCartItem({ id: item.Id, quantity: newQuantity }));
+      dispatch(updateCartItem({ id: item._id, quantity: newQuantity }));
     }
   };
 
   const handleRemove = () => {
-    dispatch(removeFromCart(item.Id));
+    dispatch(removeFromCart(item._id));
   };
 
   return (
     <div className="flex items-center py-4 border-b">
       <img
-        src={item.Product.Image}
-        alt={item.Product.Name}
+        src={item.Product.Main_Image}
+        alt={item.Product.Product_Name}
         className="w-24 h-24 object-cover rounded"
       />
       <div className="ml-4 flex-grow">
-        <h3 className="text-lg font-medium text-gray-900">{item.Product.Name}</h3>
+        <h3 className="text-lg font-medium text-gray-900">{item.Product.Product_Name}</h3>
         <p className="text-gray-500">{formatCurrency(item.Product.Price)}</p>
         <div className="flex items-center mt-2">
           <button
